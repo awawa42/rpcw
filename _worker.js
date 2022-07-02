@@ -18,6 +18,7 @@ export default {
         //代理路径，'/'代理全站。
         const proxyPath = '/'
 
+        //If proxy rules not match, fallback to this website
         //如果代理路径没匹配，回落的网址
         const fallBackUrl = ''
 
@@ -43,6 +44,14 @@ export default {
             url.port = targetUrl.port
             let new_request = new Request(url, request)
             return fetch(new_request)
+        }
+
+        function debugMsg(html) {
+            return new Response(html.pathname, {
+                headers: {
+                    'content-type': 'text/html;charset=UTF-8',
+                },
+            })
         }
     },
 }
