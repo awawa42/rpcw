@@ -14,25 +14,35 @@ export default {
             'https://www.google.com:9997'
         ]
 
+        //path to proxy, '/' will proxy the whole site。
+        //代理路径，'/'代理全站。
+        const proxyPath = '/'
+
+        //如果代理路径没匹配，回落的网址
+        const fallBackUrl = ''
+
         //choose target url based on date
         let targetUrl = ''
         let total = targetUrls.length
-        if (total > 1) {
+        if (total >= 1) {
             let day = new Date()
             let i = day.getDay() % total
             targetUrl = new URL(targetUrls[i])
-        } else if (total = 1) {
-            targetUrl = new URL(targetUrls[0])
         }
 
         //replace the request url's hostname and port
         let url = new URL(request.url)
-        if (targetUrl != '' && url.pathname.startsWith('/')) {
+        if (targetUrl != '' && url.pathname.indexOf(proxyPath) === 0) {
+            return modReqUrl(url, targetUrl)
+        } else if (fallBackUrl != '') {
+            return modReqUrl(url, new URL(fallBackUrl))
+        }
+
+        function modReqUrl(url, targetUrl) {
             url.host = targetUrl.host
             url.port = targetUrl.port
             let new_request = new Request(url, request)
             return fetch(new_request)
         }
-        return env.ASSETS.fetch(request)
     },
 }
