@@ -35,9 +35,12 @@ export default {
         let url = new URL(request.url)
         if (targetUrl != '' && url.pathname.indexOf(proxyPath) === 0) {
             return modReqUrl(url, targetUrl)
-        } else if (fallBackUrl != '') {
+        }
+        if (fallBackUrl != '') {
             return modReqUrl(url, new URL(fallBackUrl))
         }
+        // If fallback url not set,return cf page's static contents
+        return env.ASSETS.fetch(request)
 
         function modReqUrl(url, targetUrl) {
             url.host = targetUrl.host
